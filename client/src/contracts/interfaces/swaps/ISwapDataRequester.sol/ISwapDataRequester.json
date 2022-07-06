@@ -1,0 +1,91 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ISwapDataRequester",
+  "sourceName": "contracts/interfaces/swaps/ISwapDataRequester.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "aggregator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "callee",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes4",
+              "name": "functionSelector",
+              "type": "bytes4"
+            }
+          ],
+          "internalType": "struct ISwapDataRequester.CallbackParams",
+          "name": "callbackParams",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "fromTokenAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "address",
+              "name": "toTokenAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "fromAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "slippage",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "destReceiver",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "allowPartialFill",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct ISwapDataRequester.SwapDataParams",
+          "name": "swapParams",
+          "type": "tuple"
+        }
+      ],
+      "name": "request",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
