@@ -21,6 +21,11 @@
               "internalType": "uint256",
               "name": "amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "controller",
+              "type": "address"
             }
           ],
           "internalType": "struct IPoolDelegate.CallParams",
@@ -36,26 +41,9 @@
     {
       "inputs": [
         {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "pool",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "asset",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct IPoolDelegate.CallParams",
-          "name": "params",
-          "type": "tuple"
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
         }
       ],
       "name": "borrowed",
@@ -66,7 +54,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -87,6 +75,11 @@
               "internalType": "uint256",
               "name": "amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "controller",
+              "type": "address"
             }
           ],
           "internalType": "struct IPoolDelegate.CallParams",
@@ -96,32 +89,15 @@
       ],
       "name": "repay",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "components": [
-            {
-              "internalType": "address",
-              "name": "pool",
-              "type": "address"
-            },
-            {
-              "internalType": "address",
-              "name": "asset",
-              "type": "address"
-            },
-            {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-            }
-          ],
-          "internalType": "struct IPoolDelegate.CallParams",
-          "name": "params",
-          "type": "tuple"
+          "internalType": "address",
+          "name": "asset",
+          "type": "address"
         }
       ],
       "name": "supplied",
@@ -132,7 +108,7 @@
           "type": "uint256"
         }
       ],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -153,6 +129,11 @@
               "internalType": "uint256",
               "name": "amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "controller",
+              "type": "address"
             }
           ],
           "internalType": "struct IPoolDelegate.CallParams",
@@ -162,7 +143,7 @@
       ],
       "name": "supply",
       "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -183,6 +164,11 @@
               "internalType": "uint256",
               "name": "amount",
               "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "controller",
+              "type": "address"
             }
           ],
           "internalType": "struct IPoolDelegate.CallParams",

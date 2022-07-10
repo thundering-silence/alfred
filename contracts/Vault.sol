@@ -92,7 +92,8 @@ contract Vault is ISwapExecutor, BaseVault {
         IPoolDelegate.CallParams memory callParams = IPoolDelegate.CallParams({
             pool: _currentDebtPool,
             asset: _currentDebtAsset,
-            amount: amountToRepay
+            amount: amountToRepay,
+            controller: address(0)
         });
         _repay(callParams);
     }

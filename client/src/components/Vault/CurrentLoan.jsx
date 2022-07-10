@@ -47,12 +47,35 @@ const CurrentLoan = ({ vault }) => {
                     pool,
                     asset,
                     utils.parseEther(amount),
+                    constants.AddressZero
                 ],
                 {
                     gasLimit: 3000000
                 }
             )
             await tx.wait()
+            setAmount('')
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const repay = async e => {
+        e.preventDefault()
+        try {
+            const tx = await vault.repay(
+                [
+                    pool,
+                    asset,
+                    utils.parseEther(amount),
+                    constants.AddressZero
+                ],
+                {
+                    gasLimit: 3000000
+                }
+            )
+            await tx.wait()
+            setAmount('')
         } catch (e) {
             console.log(e)
         }
@@ -65,8 +88,6 @@ const CurrentLoan = ({ vault }) => {
                 <div className="flex flex-row justify-between p-1 m-1 font-semibold">
                     <div className='flex-1'>Protocol</div>
                     <div className='flex-1'>Principal</div>
-                    <div className='flex-1'>APY</div>
-                    <div className='flex-1'>Health Ratio</div>
                     <p className='flex-1'>Actions</p>
                 </div>
                 <div className="flex flex-row justify-between p-1 m-1">
@@ -76,23 +97,31 @@ const CurrentLoan = ({ vault }) => {
                     <div className='flex-1'>
                         {data.symbol} {data.balance.slice(0, 10)}
                     </div>
-                    <div className='flex-1'>
 
-                    </div>
                     <div className='flex-1'>
-
-                    </div>
-                    <div className='flex-1 btn-group flex'>
-                        <button
-                            className="btn btn-secondary btn-sm"
-                        >
-                            Borrow
-                        </button>
-                        <button
-                            className="btn btn-secondary btn-sm"
-                        >
-                            Repay
-                        </button>
+                        <form className='form-control ml-4'>
+                            <div className='input-group'>
+                                <button
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={borrow}
+                                >
+                                    borrow
+                                </button>
+                                <input
+                                    className='input input-bordered input-sm'
+                                    type='text'
+                                    value={amount}
+                                    onChange={handleAmountChange}
+                                    placeholder={''}
+                                />
+                                <button
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={repay}
+                                >
+                                    repay
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>)

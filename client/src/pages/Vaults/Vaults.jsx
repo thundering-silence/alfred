@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAccount, useBalance, useContract, useSigner } from 'wagmi'
 import { constants, utils } from 'ethers'
-import { Clear } from 'styled-icons/material'
+
 import Vault from '../../components/Vault/Vault'
 import VaultGenerator from '../../contracts/VaultGenerator.sol/VaultGenerator.json'
 
@@ -14,7 +14,7 @@ const Vaults = () => {
     const [vaults, setVaults] = useState([])
     const { data: signer } = useSigner()
     const { address } = useAccount()
-    const { data: { formatted } } = useBalance({
+    const { data } = useBalance({
         addressOrName: address
     })
 
@@ -79,7 +79,7 @@ const Vaults = () => {
                 </button>}
                 <form className='form-control flex flex-row'>
 
-                    <input placeholder={`${formatted} MAX`} className='input input-bordered' type='text' value={wrapAmount} onChange={handleWrapAmountChange} />
+                    <input placeholder={`${data?.formatted || '0.00'} MAX`} className='input input-bordered' type='text' value={wrapAmount} onChange={handleWrapAmountChange} />
 
                     <button onClick={wrapMatic} className="btn btn-outline">wrap</button>
                 </form>

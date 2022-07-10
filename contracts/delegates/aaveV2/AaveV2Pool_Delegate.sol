@@ -9,12 +9,15 @@ import "../../interfaces/third-party/AaveV2/ILendingPoolAddressesProvider.sol";
 
 import "../../interfaces/delegates/IPoolDelegate.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @notice Helper contract to interact with AaveV2' pool.
  * @dev This contract cannot hold any variables in storage as it must be called using delegatecall.
  */
 contract AaveV2PoolDelegate is IPoolDelegate {
-    function supply(IPoolDelegate.CallParams calldata params) external {
+    function supply(IPoolDelegate.CallParams calldata params) external payable {
+        require(msg.value == 0, "Delegate: 400");
         IERC20 token = IERC20(params.asset);
         token.approve(params.pool, params.amount);
         ILendingPool(params.pool).deposit(
@@ -42,36 +45,31 @@ contract AaveV2PoolDelegate is IPoolDelegate {
             0,
             address(this)
         );
+        IERC20(params.asset).transfer(msg.sender, params.amount);
     }
 
-    function repay(IPoolDelegate.CallParams calldata params) external {
+    function repay(IPoolDelegate.CallParams calldata params) external payable {
+        require(msg.value == 0, "Delegate: 400");
+        console.log("0");
         IERC20 token = IERC20(params.asset);
         token.approve(params.pool, params.amount);
+        console.log("1");
         ILendingPool(params.pool).repay(
             params.asset,
             params.amount,
             2,
             address(this)
         );
+        console.log("repayed %s to Aave", params.amount);
+        console.log("2");
     }
 
-    function supplied(IPoolDelegate.CallParams calldata params)
-        external
-        view
-        returns (uint256)
-    {
-        return IERC20(params.asset).balanceOf(address(this));
+    function supplied(address asset) external view returns (uint256) {
+        return IERC20(asset).balanceOf(msg.sender);
     }
 
-    function borrowed(IPoolDelegate.CallParams calldata params)
-        external
-        view
-        returns (uint256)
-    {
-        return IERC20(params.asset).balanceOf(address(this));
+    function borrowed(address asset) external view returns (uint256) {
+        console.log("borrowed=%s", IERC20(asset).balanceOf(msg.sender));
+        return IERC20(asset).balanceOf(msg.sender);
     }
-
-    // function toggleMarket(IPoolDelegate.CallParams calldata params, bool enter)
-    //     external
-    // {}
 }

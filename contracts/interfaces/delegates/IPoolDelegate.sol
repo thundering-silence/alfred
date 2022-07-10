@@ -6,20 +6,18 @@ interface IPoolDelegate {
         address pool;
         address asset;
         uint256 amount;
-        // address controller; // only needed for Comp
+        address controller; // only needed for Comp forks
     }
 
-    function supply(CallParams calldata params) external;
+    function supply(CallParams calldata params) external payable;
 
     function withdraw(CallParams calldata params) external;
 
     function borrow(CallParams calldata params) external;
 
-    function repay(CallParams memory params) external;
+    function repay(CallParams memory params) external payable;
 
-    // function toggleMarket(CallParams calldata params, bool enter) external;
+    function supplied(address asset) external view returns (uint256);
 
-    function supplied(CallParams calldata params) external returns (uint256);
-
-    function borrowed(CallParams memory params) external returns (uint256);
+    function borrowed(address asset) external view returns (uint256);
 }

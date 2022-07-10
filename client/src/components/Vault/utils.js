@@ -58,7 +58,6 @@ export const getProtocol = (address) => {
 export const getAssetsBalances = async (vaultAddress, signer, assets) => {
   const result = await Promise.all(
     assets.map(async (current) => {
-      console.log(current);
       const token = new ethers.Contract(
         current.address,
         ["function balanceOf(address src) public view returns (uint)"],

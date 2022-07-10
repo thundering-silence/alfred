@@ -13,7 +13,7 @@ import "./interfaces/IConfigProvider.sol";
 
 import "hardhat/console.sol";
 
-contract BaseVault is Ownable, IPoolDelegate {
+contract BaseVault is Ownable {
     using SafeERC20 for IERC20;
     using Address for address;
 
@@ -49,7 +49,11 @@ contract BaseVault is Ownable, IPoolDelegate {
         return _currentDebtAsset;
     }
 
-    function supply(IPoolDelegate.CallParams calldata params) public onlyOwner {
+    function supply(IPoolDelegate.CallParams calldata params)
+        public
+        payable
+        onlyOwner
+    {
         uint256 balance = IERC20(params.asset).balanceOf(address(this));
         // if not enough to supply, pull from sender
         if (balance < params.amount) {
@@ -60,40 +64,42 @@ contract BaseVault is Ownable, IPoolDelegate {
             );
         }
         _supplied[params.pool][params.asset] += params.amount;
-        bytes memory data = abi.encodeWithSignature(
-            "supply((address,address,uint256))",
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        bytes memory callData = abi.encodeWithSelector(
+            this.supply.selector,
             params
         );
-        address provider = _configProvider.getPoolDelegate(params.pool);
-        provider.functionDelegateCall(data, "Vault: Failed to supply");
+        Address.functionDelegateCall(delegate, callData);
         emit Supply(params.pool, params.asset, params.amount);
     }
 
     function borrow(IPoolDelegate.CallParams calldata params) public onlyOwner {
         require(_currentDebtPool == address(0), "Vault: One loan at a time");
-        require(_currentDebtAsset == address(0));
+        require(_currentDebtAsset == address(0), "Vault: One loan at a time");
         _currentDebtAsset = params.asset;
         _currentDebtPool = params.pool;
-        bytes memory data = abi.encodeWithSignature(
-            "borrow((address,address,uint256))",
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        bytes memory callData = abi.encodeWithSelector(
+            this.borrow.selector,
             params
         );
-        _configProvider.getPoolDelegate(params.pool).functionDelegateCall(
-            data,
-            "Vault: Failed to borrow"
-        );
+        Address.functionDelegateCall(delegate, callData);
         emit Borrow(params.pool, params.asset, params.amount);
-
-        IERC20(params.asset).transfer(owner(), params.amount);
     }
 
-    function repay(IPoolDelegate.CallParams memory params) public onlyOwner {
+    function repay(IPoolDelegate.CallParams memory params)
+        public
+        payable
+        onlyOwner
+    {
         uint256 balance = IERC20(params.asset).balanceOf(address(this));
         uint256 maxRepay = borrowed(params);
-        params.amount = maxRepay > params.amount ? params.amount : maxRepay;
+        params.amount = maxRepay < params.amount ? maxRepay : params.amount;
         // if not enough to repay pull from sender
+        console.log("to transfer = %s", params.amount - balance);
         if (balance < params.amount) {
-            IERC20(params.asset).transferFrom(
+            console.log(params.asset);
+            IERC20(params.asset).safeTransferFrom(
                 _msgSender(),
                 address(this),
                 params.amount - balance
@@ -104,9 +110,11 @@ contract BaseVault is Ownable, IPoolDelegate {
 
     function withdraw(IPoolDelegate.CallParams memory params) public onlyOwner {
         _withdraw(params);
-        console.log(params.amount);
-        uint balance =  _supplied[params.pool][params.asset];
-        _supplied[params.pool][params.asset] = params.amount > balance ? 0 : balance - params.amount;
+        // console.log(params.amount);
+        uint256 balance = _supplied[params.pool][params.asset];
+        _supplied[params.pool][params.asset] = params.amount > balance
+            ? 0
+            : balance - params.amount;
 
         IERC20(params.asset).transfer(owner(), params.amount);
     }
@@ -116,8 +124,9 @@ contract BaseVault is Ownable, IPoolDelegate {
         view
         returns (uint256)
     {
-        address token = _configProvider.getATokenFor(params.pool, params.asset);
-        return IERC20(token).balanceOf(address(this));
+        address asset = _configProvider.getATokenFor(params.pool, params.asset);
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        return IPoolDelegate(delegate).supplied(asset);
     }
 
     function borrowed(IPoolDelegate.CallParams memory params)
@@ -125,8 +134,9 @@ contract BaseVault is Ownable, IPoolDelegate {
         view
         returns (uint256)
     {
-        address token = _configProvider.getVTokenFor(params.pool, params.asset);
-        return IERC20(token).balanceOf(address(this));
+        address asset = _configProvider.getVTokenFor(params.pool, params.asset);
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        return IPoolDelegate(delegate).borrowed(asset);
     }
 
     function withdrawExcesses(IPoolDelegate.CallParams[] memory params) public {
@@ -162,34 +172,33 @@ contract BaseVault is Ownable, IPoolDelegate {
     function _withdraw(IPoolDelegate.CallParams memory params) internal {
         uint256 balance = supplied(params);
         params.amount = balance > params.amount ? params.amount : balance;
-        bytes memory data = abi.encodeWithSignature(
-            "withdraw((address,address,uint256))",
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        bytes memory callData = abi.encodeWithSelector(
+            this.withdraw.selector,
             params
         );
-        _configProvider.getPoolDelegate(params.pool).functionDelegateCall(
-            data,
-            "Vault: Failed to withdraw"
-        );
+        Address.functionDelegateCall(delegate, callData);
         emit Withdraw(params.pool, params.asset, params.amount);
     }
 
     function _repay(IPoolDelegate.CallParams memory params) internal {
         if (_currentDebtPool == address(0)) {
+            console.log("no debt pool");
             return;
         }
-        bytes memory data = abi.encodeWithSignature(
-            "repay((address,address,uint256))",
+        address delegate = _configProvider.getPoolDelegate(params.pool);
+        bytes memory callData = abi.encodeWithSelector(
+            this.repay.selector,
             params
         );
-        _configProvider.getPoolDelegate(params.pool).functionDelegateCall(
-            data,
-            "Vault: Failed to repay"
-        );
+        Address.functionDelegateCall(delegate, callData);
 
         if (borrowed(params) == 0) {
+            console.log("extinguished");
             _currentDebtPool = address(0);
             _currentDebtAsset = address(0);
         }
+        console.log("repayed=%s", params.amount);
         emit Repay(params.pool, params.asset, params.amount);
     }
 }

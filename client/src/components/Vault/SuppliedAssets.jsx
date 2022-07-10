@@ -49,7 +49,8 @@ const SuppliedAssets = ({ wMatic, vault }) => {
                 [
                     pool,
                     asset,
-                    utils.parseEther(amount)
+                    utils.parseEther(amount),
+                    constants.AddressZero
                 ],
                 {
                     gasLimit: 3000000
@@ -69,7 +70,8 @@ const SuppliedAssets = ({ wMatic, vault }) => {
                 [
                     pool,
                     asset,
-                    utils.parseEther(amount)
+                    utils.parseEther(amount),
+                    constants.AddressZero
                 ],
                 {
                     gasLimit: 3000000
@@ -87,7 +89,8 @@ const SuppliedAssets = ({ wMatic, vault }) => {
                 [
                     pool,
                     asset,
-                    utils.parseEther(amount)
+                    utils.parseEther(amount),
+                    constants.AddressZero
                 ],
                 {
                     gasLimit: 3000000
@@ -106,6 +109,7 @@ const SuppliedAssets = ({ wMatic, vault }) => {
                     pool,
                     asset,
                     constants.Zero,
+                    constants.AddressZero
                 ]],
                 {
                     gasLimit: 3000000
