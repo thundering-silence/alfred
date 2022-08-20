@@ -31,6 +31,6 @@ I am happy to ave built a system with identical functionality to Chainlink's Any
 I understood the importance of standards as it is truly annoying when forks make small changes to the codebase; this heavily impacts builders that would like to build on top of such protocols.
 
 ## What's next for Alfred
-
 - Integrate additional protocols by finishing up & writing new delegates (0vix, Comp, etc)
 - move towards a proxy model rather than deploying a whole new contract for every Vault
+- Compound is ready to be supported, hence deploying on Ethereum seems a good way forward
