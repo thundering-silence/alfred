@@ -14,7 +14,7 @@ This project is a proof of concept and although contracts leveraging Chainlink a
 
 ## How we built it
 
-
+The biggest problem was creating a standard for interoperating with the lending protocols. I had to create custom built libraries exposing the same interfaces to execute operations on different underlying logic. In addition testing the chainlink any api intergration was very complex, hence I decided to build on the side a servie that would replicate such functionality which proved to be quite fun, especially because I managed to do it ;)
 
 ## Challenges we ran into
 
@@ -24,12 +24,13 @@ Not being able to query for Forex data on testnet has forced me to figure out ho
 
 ## Accomplishments we are proud of
 
+I am happy to ave built a system with identical functionality to Chainlink's Any API service as well as managed to create standardized libraries to interact with various protocols.
 
 ## What we learned
 
-
-
+I understood the importance of standards as it is truly annoying when forks make small changes to the codebase that affect builders that would like to build on top of them.
 
 ## What's next for Alfred
 
-- Integrate additional protocols by writing new delegates
+- Integrate additional protocols by finishing up & writing new delegates (0vix, Comp, etc)
+- move towards a proxy model rather than deploying a whole new contract for every Vault
