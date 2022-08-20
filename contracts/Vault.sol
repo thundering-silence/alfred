@@ -88,6 +88,7 @@ contract Vault is ISwapExecutor, BaseVault {
         );
 
         uint256 amount = balanceAfter - balanceBefore;
+        require(amount > 0);
         uint256 amountToRepay = _handleFees(amount);
         IPoolDelegate.CallParams memory callParams = IPoolDelegate.CallParams({
             pool: _currentDebtPool,
