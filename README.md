@@ -34,3 +34,12 @@ I understood the importance of standards as it is truly annoying when forks make
 - Integrate additional protocols by finishing up & writing new delegates (0vix, Comp, etc)
 - move towards a proxy model rather than deploying a whole new contract for every Vault
 - Compound is ready to be supported, hence deploying on Ethereum seems a good way forward
+
+
+## To run this project
+
+```
+$ npx hardhat node
+$ yarn deploy
+$ cd client && yarn dev
+```
