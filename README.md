@@ -28,7 +28,7 @@ I am happy to ave built a system with identical functionality to Chainlink's Any
 
 ## What we learned
 
-I understood the importance of standards as it is truly annoying when forks make small changes to the codebase that affect builders that would like to build on top of them.
+I understood the importance of standards as it is truly annoying when forks make small changes to the codebase; this heavily impacts builders that would like to build on top of such protocols.
 
 ## What's next for Alfred
 
